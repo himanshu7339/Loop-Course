@@ -1,26 +1,29 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import {
-  Stack,
-  HStack,
   VStack,
   Heading,
-  Text,
   Button,
-  Image,
   Box,
   Input,
   Container,
   FormLabel,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import { login } from '../../redux/actions/userAction';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
+  const submitHandler = e => {
+    e.preventDefault();
+    dispatch(login(email, password));
+  };
   return (
     <Container h={'95vh'}>
       <VStack h={'full'} justifyContent={'center'} spacing={'16px'}>
         <Heading children="Welcome to CourseBundler" />
-        <form style={{ width: '100%' }}>
+        <form onSubmit={submitHandler} style={{ width: '100%' }}>
           <Box my={'4'}>
             <FormLabel htmlFor="email" children="Email Address" />
             <Input
@@ -36,7 +39,7 @@ const Login = () => {
             <FormLabel htmlFor="password" children="Password" />
             <Input
               id="password"
-              type='password'
+              type="password"
               value={password}
               placeholder="Password"
               onChange={e => setPassword(e.target.value)}

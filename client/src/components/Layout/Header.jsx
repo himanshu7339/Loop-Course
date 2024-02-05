@@ -1,14 +1,10 @@
 import React from 'react';
 import { ColorModeSwitcher } from '../../ColorModeSwitcher';
+
 import {
-  Stack,
   HStack,
   VStack,
-  Heading,
-  Text,
   Button,
-  Image,
-  Box,
   Drawer,
   DrawerOverlay,
   DrawerContent,
@@ -18,16 +14,16 @@ import {
 } from '@chakra-ui/react';
 import { RiDashboardFill, RiLogoutBoxFill, RiMenu5Fill } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
-const Header = () => {
+const Header = ({ isAuthenticated = false, user }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const isAuthenticated = true;
-  const user = {
-    role: 'admin',
-  }
 
-  const logoutHandler = (e) => {
-    console.log(`logout `)
-  }
+  // const user = {
+  //   role: 'admin',
+  // };
+
+  const logoutHandler = e => {
+    console.log(`logout `);
+  };
   return (
     <>
       <ColorModeSwitcher />
@@ -40,7 +36,7 @@ const Header = () => {
         position={'fixed'}
         top={'6'}
         left={'6'}
-        zIndex={"overlay"}
+        zIndex={'overlay'}
       >
         <RiMenu5Fill />
       </Button>
@@ -83,20 +79,26 @@ const Header = () => {
                           </Button>
                         </Link>
                         <Button variant={'ghost'} onClick={logoutHandler}>
-                          <RiLogoutBoxFill style={{margin:"4px" ,fontSize:"20px"}} /> Logout
+                          <RiLogoutBoxFill
+                            style={{ margin: '4px', fontSize: '20px' }}
+                          />{' '}
+                          Logout
                         </Button>
                       </HStack>
-                      {
-                user && user.role === 'admin' && <Link to={"/admin/dashboard"}>
-                  <Button colorScheme='purple' variant={'ghost'}><RiDashboardFill style={{margin:"4px"}}/> Dashboard</Button>
-                </Link>
-              }
+                      {user && user.role === 'admin' && (
+                        <Link to={'/admin/dashboard'}>
+                          <Button colorScheme="purple" variant={'ghost'}>
+                            <RiDashboardFill style={{ margin: '4px' }} />{' '}
+                            Dashboard
+                          </Button>
+                        </Link>
+                      )}
                     </VStack>
                   </>
                 ) : (
                   <>
                     <Link to={'/login'}>
-                      <Button  colorScheme={'yellow'}>Login</Button>
+                      <Button colorScheme={'yellow'}>Login</Button>
                     </Link>
                     <p>OR</p>
                     <Link to={'/signup'}>
@@ -105,8 +107,6 @@ const Header = () => {
                   </>
                 )}
               </HStack>
-
-              
             </VStack>
           </DrawerBody>
         </DrawerContent>
