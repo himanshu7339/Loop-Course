@@ -1,5 +1,6 @@
 import React from 'react';
 import { ColorModeSwitcher } from '../../ColorModeSwitcher';
+import {useDispatch} from "react-redux"
 
 import {
   HStack,
@@ -14,15 +15,15 @@ import {
 } from '@chakra-ui/react';
 import { RiDashboardFill, RiLogoutBoxFill, RiMenu5Fill } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
+import { logoutUser } from '../../redux/actions/userAction';
 const Header = ({ isAuthenticated = false, user }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  // const user = {
-  //   role: 'admin',
-  // };
-
+ 
+const dispatch = useDispatch()
   const logoutHandler = e => {
-    console.log(`logout `);
+    onClose()
+    dispatch(logoutUser())
   };
   return (
     <>
