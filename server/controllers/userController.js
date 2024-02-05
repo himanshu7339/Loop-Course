@@ -57,7 +57,7 @@ export const logout = catchAsyncError(async (req, res, next) => {
   res
     .status(200)
     .cookie("token", null, {
-      expires: new Date(Date.now()),
+      expires: new Date(0),
       httpOnly: true,
       secure: true,
       sameSite: "none",
@@ -288,20 +288,23 @@ export const deleteMyProfile = catchAsyncError(async (req, res, next) => {
   await cloudinary.v2.uploader.destroy(user.avatar.public_id);
   // cancel Subscription
   await user.deleteOne();
-  res.status(200).cookie("token",null,{
-    expires: new Date(Date.now())
-  }).json({
-    success: true,
-    message: "User Deleted Done",
-  });
+  res
+    .status(200)
+    .cookie("token", null, {
+      expires: new Date(Date.now()),
+    })
+    .json({
+      success: true,
+      message: "User Deleted Done",
+    });
 });
 
-User.watch().on("change",async()=>{
-  const state = await Stats.find({}).sort({createdAt:"desc"}).limit(1);
-  const subscription = await User.find({"subscription.status":"active"});
-  state[0].subscription=subscription.length;
+User.watch().on("change", async () => {
+  const state = await Stats.find({}).sort({ createdAt: "desc" }).limit(1);
+  const subscription = await User.find({ "subscription.status": "active" });
+  state[0].subscription = subscription.length;
   state[0].users = await User.countDocuments();
   state[0].subscription = subscription.length;
-  state[0].createAt = new Date(Date.now())
-  await state[0].save()
-})
+  state[0].createAt = new Date(Date.now());
+  await state[0].save();
+});
