@@ -18,6 +18,5 @@ root.render(
         <App />
       </ChakraProvider>
     </Provider>
-    ,
   </StrictMode>
 );

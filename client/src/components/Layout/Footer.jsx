@@ -1,16 +1,5 @@
 import React from 'react';
-import {
-  Stack,
-  HStack,
-  VStack,
-  Heading,
-  Text,
-  Button,
-  Image,
-  Container,
-  Box,
-  Input,
-} from '@chakra-ui/react';
+import { Stack, HStack, VStack, Heading, Box } from '@chakra-ui/react';
 
 import {
   TiSocialYoutubeCircular,
@@ -31,8 +20,13 @@ const Footer = () => {
           />
         </VStack>
 
-        <HStack spacing={['2', '10']} justifyContent={'center'} color={"white"} fontSize={"50"}>
-          <a href="https://youtube.com" target='blank'>
+        <HStack
+          spacing={['2', '10']}
+          justifyContent={'center'}
+          color={'white'}
+          fontSize={'50'}
+        >
+          <a href="https://youtube.com" target="blank">
             <TiSocialYoutubeCircular />
           </a>
           <a href="https://instagram.com" target="blank">

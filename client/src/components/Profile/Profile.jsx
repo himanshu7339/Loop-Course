@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Stack,
   HStack,
@@ -7,15 +7,16 @@ import {
   Text,
   Button,
   Image,
-  Box,
   Input,
   Container,
-  FormLabel,
   Avatar,
   useDisclosure,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { RiDeleteBin7Fill } from 'react-icons/ri';
+
+import { toast } from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Modal,
   ModalOverlay,
@@ -25,36 +26,36 @@ import {
   ModalBody,
   ModalCloseButton,
 } from '@chakra-ui/react';
-const Profile = () => {
-  const user = {
-    name: 'Himanshu',
-    email: 'Himanshu@gmail.com',
-    createAt: String(new Date().toISOString()),
-    role: 'user',
-    subscription: {
-      status: undefined,
-    },
+import { updateProfilePicture } from '../../redux/actions/profileAction';
+import { getMyProfile } from '../../redux/actions/userAction';
+const Profile = ({ user }) => {
+  const dispatch = useDispatch();
+  const { loading, message, error } = useSelector(state => state.profile);
+  
 
-    playlist: [
-      {
-        id: 1,
-        title: 'Playlist 1',
-        description: 'Playlist 1 description',
-        image:
-          'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      },
-    ],
+  const changeImageSubmitHandler = async (e, image) => {
+    e.preventDefault();
+    const myForm = new FormData();
+    myForm.append('file', image);
+    await dispatch(updateProfilePicture(myForm));
+    dispatch(getMyProfile());
   };
 
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch({ type: 'clearError' });
+    }
+    if (message) {
+      toast.success(message);
+      dispatch({ type: 'clearMessage' });
+    }
+  }, [dispatch, error, message]);
   const removeFromPlaylistHandler = id => {
     console.log(id);
   };
-
-  const changeImageSubmitHandler = (e,image) =>{
-e.preventDefault()
-console.log(image)
-  }
- const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Container minH={'95vh'} maxH={'container.lg'} py={'8'}>
       <Heading m={'8'} textTransform={'uppercase'}>
@@ -67,8 +68,13 @@ console.log(image)
         spacing={['8', '16']}
       >
         <VStack>
-          <Avatar boxSize={'48'} />
-          <Button colorScheme="yellow" variant={'ghost'} onClick={onOpen}>
+          <Avatar boxSize={'48'} src={user.avatar.url} />
+          <Button
+            colorScheme="yellow"
+            variant={'ghost'}
+            onClick={onOpen}
+            isLoading={loading}
+          >
             Change Photo
           </Button>
         </VStack>
@@ -84,13 +90,13 @@ console.log(image)
           </HStack>
           <HStack>
             <Text fontWeight={'bold'}>Created At</Text>
-            <Text>{user.createAt.split('T')[0]}</Text>
+            <Text>{user.createdAt.split('T')[0]}</Text>
           </HStack>
 
           {user.role !== 'admin' && (
             <HStack>
               <Text fontWeight={'bold'}>Subscription</Text>
-              {user.subscription.status === 'active' ? (
+              {user.subscription && user.subscription.status === 'active' ? (
                 <Button color={'yellow.500'} variant={'unstyled'}>
                   Cancel Subscription
                 </Button>
@@ -147,16 +153,20 @@ console.log(image)
         </Stack>
       )}
 
-      <ChangePhotoBox isOpen={isOpen} onClose={onClose} changeImageSubmitHandler={changeImageSubmitHandler}  />
+      <ChangePhotoBox
+        isOpen={isOpen}
+        onClose={onClose}
+        changeImageSubmitHandler={changeImageSubmitHandler}
+      />
     </Container>
   );
 };
 
 export default Profile;
 
-function ChangePhotoBox({isOpen,onClose,changeImageSubmitHandler}) {
-    const [imagePrev, setImagePrev] = useState('');
-    const [image, setImage] = useState('');
+function ChangePhotoBox({ isOpen, onClose, changeImageSubmitHandler }) {
+  const [imagePrev, setImagePrev] = useState('');
+  const [image, setImage] = useState('');
   const changeImage = e => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -170,7 +180,7 @@ function ChangePhotoBox({isOpen,onClose,changeImageSubmitHandler}) {
     onClose();
     setImagePrev('');
     setImage('');
-  }
+  };
   return (
     <>
       <Modal isOpen={isOpen} onClose={closeHandler}>
@@ -180,13 +190,12 @@ function ChangePhotoBox({isOpen,onClose,changeImageSubmitHandler}) {
           <ModalCloseButton />
           <ModalBody>
             <Container>
-              <form onSubmit={e=> changeImageSubmitHandler(e,image)}>
+              <form onSubmit={e => changeImageSubmitHandler(e, image)} enctype="multipart/form-data">
                 <VStack spacing={'8'}>
-                  {
-                    imagePrev && <Avatar boxSize={'48'} src={imagePrev} />
-                  }
+                  {imagePrev && <Avatar boxSize={'48'} src={imagePrev} />}
                   <Input
                     type="file"
+                    name='file'
                     css={{
                       '&::file-selector-button': {
                         cursor: 'pointer',

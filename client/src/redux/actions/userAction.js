@@ -32,7 +32,7 @@ export const register = (formData) => async dispatch => {
    formData,
       {
         headers: {
-          'Content-Type': 'multipart/from-data',
+          'Content-Type': "multipart/form-data"
         },
         withCredentials:true
       }
