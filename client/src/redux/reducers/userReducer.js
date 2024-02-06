@@ -78,10 +78,7 @@ export const profileReducer = createReducer(initialState, builder => {
       state.loading = false;
       state.error = action.payload;
     })
-    
-    
-    
-    
+
     .addCase('changePasswordRequest', state => {
       state.loading = true;
     })
@@ -92,7 +89,33 @@ export const profileReducer = createReducer(initialState, builder => {
     .addCase('changePasswordFail', (state, action) => {
       state.loading = false;
       state.error = action.payload;
-    }).addCase('updateProfilePictureRequest', state => {
+    })
+
+
+    .addCase('forgetPasswordRequest', state => {
+      state.loading = true;
+    })
+    .addCase('forgetPasswordSuccess', (state, action) => {
+      state.loading = false;
+      state.message = action.payload;
+    })
+    .addCase('forgetPasswordFail', (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    })
+
+    .addCase('resetPasswordRequest', state => {
+      state.loading = true;
+    })
+    .addCase('resetPasswordSuccess', (state, action) => {
+      state.loading = false;
+      state.message = action.payload;
+    })
+    .addCase('resetPasswordFail', (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    })
+    .addCase('updateProfilePictureRequest', state => {
       state.loading = true;
     })
     .addCase('updateProfilePictureSuccess', (state, action) => {
@@ -102,7 +125,8 @@ export const profileReducer = createReducer(initialState, builder => {
     .addCase('updateProfilePictureFail', (state, action) => {
       state.loading = false;
       state.error = action.payload;
-    }).addCase('clearError', state => {
+    })
+    .addCase('clearError', state => {
       state.error = null;
     })
     .addCase('clearMessage', state => {

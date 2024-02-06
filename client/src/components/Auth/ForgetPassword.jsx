@@ -1,41 +1,49 @@
-import React, { useState } from 'react';
-import {
-  Stack,
-  HStack,
-  VStack,
-  Heading,
-  Text,
-  Button,
-  Image,
-  Box,
-  Input,
-  Container,
-  FormLabel,
-  Avatar,
-} from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { VStack, Heading, Button, Input, Container } from '@chakra-ui/react';
+import { forgetPassword } from '../../redux/actions/profileAction';
+import {toast} from "react-hot-toast"
 
 const ForgetPassword = () => {
-    const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('');
+  const dispatch = useDispatch();
+  const { loading, message, error } = useSelector(state => state.profile);
+  const submitHandler = e => {
+    e.preventDefault();
+    dispatch(forgetPassword(email));
+  };
+  useEffect(()=>{
+if(error){
+  toast.error(error)
+  dispatch({type:"clearError"})
+}
+if(message){
+  toast.success(message)
+  dispatch({type:"clearMessage"})
+}
+  },[error,message,dispatch])
   return (
-    <Container py={"16"} h={"90vh"}>
-      <form>
+    <Container py={'16'} h={'90vh'}>
+      <form onSubmit={submitHandler}>
         <Heading
           children="Forget Password"
           my={'16'}
           textTransform={'uppercase'}
           textAlign={['center', 'left']}
         />
-        <VStack spacing={"8"}>
-        <Input
-              id="email"
-              required
-              value={email}
-              placeholder="example@gmail.com"
-              type="email"
-              onChange={e => setEmail(e.target.value)}
-              focusBorderColor="yellow.500"
-            />
-            <Button type='submit' w={"full"} colorScheme='yellow'>Send Reset Link</Button>
+        <VStack spacing={'8'}>
+          <Input
+            id="email"
+            required
+            value={email}
+            placeholder="example@gmail.com"
+            type="email"
+            onChange={e => setEmail(e.target.value)}
+            focusBorderColor="yellow.500"
+          />
+          <Button isLoading={loading} type="submit" w={'full'} colorScheme="yellow">
+            Send Reset Link
+          </Button>
         </VStack>
       </form>
     </Container>

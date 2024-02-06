@@ -31,7 +31,6 @@ import { getMyProfile } from '../../redux/actions/userAction';
 const Profile = ({ user }) => {
   const dispatch = useDispatch();
   const { loading, message, error } = useSelector(state => state.profile);
-  
 
   const changeImageSubmitHandler = async (e, image) => {
     e.preventDefault();
@@ -40,7 +39,6 @@ const Profile = ({ user }) => {
     await dispatch(updateProfilePicture(myForm));
     dispatch(getMyProfile());
   };
-
 
   useEffect(() => {
     if (error) {
@@ -157,6 +155,7 @@ const Profile = ({ user }) => {
         isOpen={isOpen}
         onClose={onClose}
         changeImageSubmitHandler={changeImageSubmitHandler}
+        loading={loading}
       />
     </Container>
   );
@@ -164,7 +163,12 @@ const Profile = ({ user }) => {
 
 export default Profile;
 
-function ChangePhotoBox({ isOpen, onClose, changeImageSubmitHandler }) {
+function ChangePhotoBox({
+  isOpen,
+  onClose,
+  changeImageSubmitHandler,
+  loading,
+}) {
   const [imagePrev, setImagePrev] = useState('');
   const [image, setImage] = useState('');
   const changeImage = e => {
@@ -190,13 +194,16 @@ function ChangePhotoBox({ isOpen, onClose, changeImageSubmitHandler }) {
           <ModalCloseButton />
           <ModalBody>
             <Container>
-              <form onSubmit={e => changeImageSubmitHandler(e, image)} enctype="multipart/form-data">
+              <form
+                onSubmit={e => changeImageSubmitHandler(e, image)}
+                enctype="multipart/form-data"
+              >
                 <VStack spacing={'8'}>
                   {imagePrev && <Avatar boxSize={'48'} src={imagePrev} />}
                   <Input
                     type="file"
                     accept="image/*"
-                    name='file'
+                    name="file"
                     css={{
                       '&::file-selector-button': {
                         cursor: 'pointer',
@@ -210,7 +217,12 @@ function ChangePhotoBox({ isOpen, onClose, changeImageSubmitHandler }) {
                     }}
                     onChange={changeImage}
                   />
-                  <Button w={'full'} colorScheme="yellow" type="submit">
+                  <Button
+                    w={'full'}
+                    colorScheme="yellow"
+                    type="submit"
+                    isLoading={loading}
+                  >
                     Change
                   </Button>
                 </VStack>

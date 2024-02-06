@@ -82,7 +82,7 @@ function App() {
               path="/profile"
               element={
                 <ProtectedRoute isAuthenticated={isAuthenticated}>
-                  <Profile user={user}/>
+                  <Profile user={user} />
                 </ProtectedRoute>
               }
             />
@@ -103,7 +103,17 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/about" element={<About />} />
             <Route path="/request" element={<Request />} />
-            <Route path="/forgetpassword" element={<ForgetPassword />} />
+            <Route
+              path="/forgetpassword"
+              element={
+                <ProtectedRoute
+                  isAuthenticated={!isAuthenticated}
+                  redirect="/profile"
+                >
+                  <ForgetPassword />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/subscribe"
               element={
@@ -115,7 +125,17 @@ function App() {
             <Route path="*" element={<NotFound />} />
             <Route path="/payment_success" element={<PaymentSuccess />} />
             <Route path="/payment_fail" element={<PaymentFail />} />
-            <Route path="/resetpassword/:token" element={<ResetPassword />} />
+            <Route
+              path="/resetpassword/:token"
+              element={
+                <ProtectedRoute
+                  isAuthenticated={!isAuthenticated}
+                  redirect="/profile"
+                >
+                  <ResetPassword />
+                </ProtectedRoute>
+              }
+            />
             {/* Admin routes */}
             <Route
               path="/admin/dashboard"

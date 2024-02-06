@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import {
   VStack,
   Heading,
@@ -20,6 +21,7 @@ const Signup = () => {
   const [imagePrev, setImagePrev] = useState('');
   const [image, setImage] = useState('');
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const changeImageHandler = e => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -37,6 +39,7 @@ const Signup = () => {
     myForm.append("password",password)
     myForm.append("file",image)
     dispatch(register(myForm));
+    navigate("/");
   };
 
   return (
