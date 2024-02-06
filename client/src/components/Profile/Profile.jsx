@@ -195,6 +195,7 @@ function ChangePhotoBox({ isOpen, onClose, changeImageSubmitHandler }) {
                   {imagePrev && <Avatar boxSize={'48'} src={imagePrev} />}
                   <Input
                     type="file"
+                    accept="image/*"
                     name='file'
                     css={{
                       '&::file-selector-button': {
