@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import {
-  Stack,
-  HStack,
   VStack,
   Heading,
-  Text,
   Button,
-  Image,
   Box,
   Input,
   Container,
@@ -14,6 +10,8 @@ import {
   Avatar,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { register } from '../../redux/actions/userAction';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
@@ -21,6 +19,7 @@ const Signup = () => {
   const [name, setName] = useState('');
   const [imagePrev, setImagePrev] = useState('');
   const [image, setImage] = useState('');
+  const dispatch = useDispatch();
   const changeImageHandler = e => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -30,11 +29,21 @@ const Signup = () => {
       setImage(file);
     };
   };
+  const submitHandler = e => {
+    e.preventDefault();
+    const myForm = new FormData();
+    myForm.append("name",name)
+    myForm.append("email",email)
+    myForm.append("password",password)
+    myForm.append("file",image)
+    dispatch(register(myForm));
+  };
+
   return (
     <Container h={'95vh'}>
       <VStack h={'full'} justifyContent={'center'} spacing={'16px'}>
         <Heading children="Sign Up" textTransform={'uppercase'} />
-        <form style={{ width: '100%' }}>
+        <form style={{ width: '100%' }} onSubmit={submitHandler}>
           <Box my={'4'} display={'flex'} justifyContent={'center'}>
             <Avatar src={imagePrev} size={'2xl'} />
           </Box>
