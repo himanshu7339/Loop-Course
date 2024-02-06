@@ -11,7 +11,9 @@ import { Stats } from "../models/StatsModel.js";
 // register user
 export const register = catchAsyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
+  console.log(req)
   const file = req.file;
+  console.log(file)
   if (!name || !email || !password || !file)
     return next(new ErrorHandler("Please provide all fields", 400));
   let user = await User.findOne({ email });

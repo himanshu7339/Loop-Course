@@ -10,7 +10,7 @@ const UpdateProfile = ({user}) => {
 const dispatch = useDispatch()
   const onSubmitHandler = async e => {
     e.preventDefault();
-  await  dispatch(updateProfile(name,email))
+  dispatch(updateProfile(name,email))
   dispatch(getMyProfile)
    
   };
@@ -28,7 +28,7 @@ const dispatch = useDispatch()
   }, [dispatch, error, message]);
 
 
-  
+
   const removeFromPlaylistHandler = id => {
     console.log(id);
   };
