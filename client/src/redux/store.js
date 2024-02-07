@@ -1,13 +1,14 @@
-import { configureStore } from '@reduxjs/toolkit'
-import { profileReducer, userReducer } from './reducers/userReducer'
-
+import { configureStore } from '@reduxjs/toolkit';
+import { profileReducer, subscriptionReducer, userReducer } from './reducers/userReducer';
+import { coursesReducer } from './reducers/courseReducer';
 
 export const store = configureStore({
   reducer: {
-   user:userReducer,
-   profile:profileReducer
+    user: userReducer,
+    profile: profileReducer,
+    courses: coursesReducer,
+    subscription: subscriptionReducer,
   },
-})
+});
 
-
-export const server = `https://loop-course-server.vercel.app/api/v1`
+export const server = `https://course-loop-server.onrender.com/api/v1`;

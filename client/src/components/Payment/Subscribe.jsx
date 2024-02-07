@@ -1,19 +1,71 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-hot-toast';
 import {
-  Stack,
-  HStack,
   VStack,
   Heading,
   Text,
   Button,
-  Image,
   Box,
-  Input,
   Container,
-  FormLabel,
-  Avatar,
 } from '@chakra-ui/react';
-const Subscribe = () => {
+import axios from 'axios';
+import { server } from '../../redux/store';
+import { buySubscription } from '../../redux/actions/userAction';
+const Subscribe = ({user}) => {
+  const dispatch = useDispatch();
+  const [key, setKey] = useState('');
+  const { loading, error, subscriptionId } = useSelector(
+    state => state.subscription
+  );
+  
+  const subscriptionHandler = async () => {
+    const {
+      data: { key },
+    } = await axios.get(`${server}/razorpaykey`);
+    setKey(key);
+    dispatch(buySubscription());
+  };
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch({ type: 'clearError' });
+    }
+    // if (message) {
+    //   toast.success(message);
+    //   dispatch({ type: 'clearMessage' });
+    // }
+
+    if (subscriptionId) {
+      const openPopUp = () => {
+        const options = {
+          key,
+          name: 'Loop Course',
+          description: 'Get access to all premium content',
+          subscription_id:subscriptionId,
+          callback_url:`${server}/paymentverification`,
+
+          prefill: { 
+            "name": user.name, 
+            "email": user.email, 
+            "contact": "" 
+        },
+
+        notes: {
+          "address": "Himanshu Office"
+      },
+      theme: {
+        "color": "#FFC00"
+    }
+        };
+        const razor = new window.Razorpay(options);
+        razor.open();
+      };
+
+      openPopUp();
+    }
+  }, [dispatch, error, user.name,user.email,key,subscriptionId]);
   return (
     <Container h={'90vh'} p={'16'}>
       <Heading children="Welcome" my={'8'} textAlign={'center'} />
@@ -32,17 +84,27 @@ const Subscribe = () => {
             <Heading size={'md'} children="₹299.00 Only" />
           </VStack>
 
-          <Button my={'8'} w={'full'} colorScheme="yellow">
+          <Button
+            onClick={subscriptionHandler}
+            my={'8'}
+            w={'full'}
+            colorScheme="yellow"
+            isLoading={loading}
+          >
             Buy Now
           </Button>
         </Box>
 
-        <Box bg={'#B2A59B'} p={"4"} spacing="8px" css={{ borderRadius: '0 0 8px 8px' }}>
+        <Box
+          bg={'#B2A59B'}
+          p={'4'}
+          spacing="8px"
+          css={{ borderRadius: '0 0 8px 8px' }}
+        >
           <Heading
             children="100% refund at cancellation"
-            fontSize={"large"}
-            color={"white"}
-            
+            fontSize={'large'}
+            color={'white'}
           />
           <Text
             fontSize={'xs'}

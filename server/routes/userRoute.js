@@ -5,6 +5,7 @@ import {
   deleteMyProfile,
   deleteUser,
   forgetPassword,
+  getAllUsers,
   getMyProfile,
   login,
   logout,
@@ -50,6 +51,6 @@ router.route("/removefromplaylist").delete(isAuth, removeToPlayList);
 
 
 // admin routes
-router.route("/admin/users").get(isAuth,authorizeAdmin,getAllCourses)
+router.route("/admin/users").get(isAuth,authorizeAdmin,getAllUsers)
 router.route("/admin/user/:id").put(isAuth,authorizeAdmin,updateUserRole).delete(isAuth,authorizeAdmin,updateUserRole,deleteUser)
 export default router;

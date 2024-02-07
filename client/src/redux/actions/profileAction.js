@@ -137,3 +137,27 @@ export const resetPassword = (token,newPassword) => async dispatch => {
       });
     }
   };
+
+  
+
+
+// remove from playlist
+export const removeFromPlaylist = id => async dispatch => {
+  try {
+    dispatch({ type: 'removeFromPlaylistRequest' });
+
+    const { data } = await axios.delete(
+      `${server}/removefromplaylist?id=${id}`,
+      {
+       
+        withCredentials: true,
+      }
+    );
+    dispatch({ type: 'removeFromPlaylistSuccess', payload: data.message });
+  } catch (error) {
+    dispatch({
+      type: 'removeFromPlaylistFail',
+      payload: error.response.data.message,
+    });
+  }
+};

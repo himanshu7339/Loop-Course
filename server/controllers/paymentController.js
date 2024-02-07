@@ -67,7 +67,7 @@ export const paymentVerification = catchAsyncError(async (req, res, next) => {
 export const razorpayKey = catchAsyncError(async (req, res, next) => {
   res.status(200).json({
     success: true,
-    key: process.env.process.env.RAZORPAY_API_KEY,
+    key: process.env.RAZORPAY_API_KEY,
   });
 });
 

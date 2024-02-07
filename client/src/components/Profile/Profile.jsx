@@ -26,7 +26,7 @@ import {
   ModalBody,
   ModalCloseButton,
 } from '@chakra-ui/react';
-import { updateProfilePicture } from '../../redux/actions/profileAction';
+import { removeFromPlaylist, updateProfilePicture } from '../../redux/actions/profileAction';
 import { getMyProfile } from '../../redux/actions/userAction';
 const Profile = ({ user }) => {
   const dispatch = useDispatch();
@@ -50,8 +50,11 @@ const Profile = ({ user }) => {
       dispatch({ type: 'clearMessage' });
     }
   }, [dispatch, error, message]);
-  const removeFromPlaylistHandler = id => {
-    console.log(id);
+
+
+  const removeFromPlaylistHandler = async id => {
+   await dispatch(removeFromPlaylist(id))
+    dispatch(getMyProfile())
   };
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
@@ -129,19 +132,19 @@ const Profile = ({ user }) => {
         >
           {user.playlist.map((playlist, index) => {
             return (
-              <VStack w={'48'} m={'2'} key={playlist.id}>
+              <VStack w={'48'} m={'2'} key={playlist._id}>
                 <Image
                   boxSize={'full'}
                   objectFit={'contain'}
-                  src={playlist.image}
+                  src={playlist.poster}
                 />
                 <HStack>
-                  <Link to={`/course${playlist.id}`}>
+                  <Link to={`/course/${playlist.course}`}>
                     <Button variant={'ghost'} colorScheme={'yellow'}>
                       Watch Now
                     </Button>
                   </Link>
-                  <Button onClick={removeFromPlaylistHandler(playlist.id)}>
+                  <Button onClick={()=>removeFromPlaylistHandler(playlist.course)}>
                     <RiDeleteBin7Fill />
                   </Button>
                 </HStack>

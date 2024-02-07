@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Stack,
   HStack,
@@ -20,6 +20,7 @@ const CourseCard = ({
   desc,
   lectureCount,
 }) => {
+
   return (
     <VStack className="course" alignItems={['center', 'flex-start']}>
       <Image src={imageSrc} boxSize={'60'} objectFit={'contain'} />
@@ -52,7 +53,7 @@ const CourseCard = ({
           {' '}
           <Button colorScheme="yellow">Watch Now</Button>
         </Link>
-        <Button variant={"ghost"} colorScheme="yellow" onClick={()=>addToPlaylistHandler(id)}>Add to Playlist</Button>
+        <Button variant={"ghost"} colorScheme="yellow" onClick={()=>addToPlaylistHandler(id)} >Add to Playlist</Button>
       </Stack>
     </VStack>
   );

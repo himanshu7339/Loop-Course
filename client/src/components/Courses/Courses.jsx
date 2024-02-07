@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-hot-toast';
+import Loader from '../Layout/Loader';
 import {
   Stack,
   HStack,
@@ -9,9 +12,12 @@ import {
   Input,
 } from '@chakra-ui/react';
 import CourseCard from './CourseCard';
+import { getAllCourses } from '../../redux/actions/courseAction';
+import { addToPlaylist, getMyProfile } from '../../redux/actions/userAction';
 const Courses = () => {
   const [keyword, setKeyword] = useState('');
   const [category, setCategory] = useState('');
+ 
   const categories = [
     'Electronics',
     'Clothing',
@@ -20,7 +26,27 @@ const Courses = () => {
     'Sports',
     'Beauty',
   ];
-  const addToPlaylistHandler = () => {};
+  const addToPlaylistHandler = async courseId => {
+   await dispatch(addToPlaylist(courseId));
+    dispatch(getMyProfile())
+  };
+  const { courses, loading, error, message } = useSelector(
+    state => state.courses
+  );
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getAllCourses(category, keyword));
+
+    if (error) {
+      toast.error(error);
+      dispatch({ type: 'clearError' });
+    }
+    if (message) {
+      toast.success(message);
+      dispatch({ type: 'clearMessage' });
+    }
+  }, [category, keyword, dispatch, error, message]);
+
   return (
     <Container minH={'95vh'} maxW={'container.lg'} paddingY={'8'}>
       <Heading children="All Courses" m={'8'} />
@@ -55,54 +81,32 @@ const Courses = () => {
           );
         })}
       </HStack>
+
       <Stack
         direction={['column', 'row']}
         flexWrap={'wrap'}
         justifyContent={['flex-start', 'space-evenly']}
         alignItems={['center', 'flex-start']}
       >
-        <CourseCard
-          title={'Introduction to Web Development'}
-          imageSrc={
-            'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
-          }
-          views={'1100'}
-          creator={'Himanshu'}
-          desc={
-            'Learn the basics of web development with HTML, CSS, and JavaScript'
-          }
-          lectureCount={2}
-          addToPlaylistHandler={addToPlaylistHandler}
-          id={'9u402uo95h345'}
-        />
-        <CourseCard
-          title={'Introduction to Web Development'}
-          imageSrc={
-            'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
-          }
-          views={'1100'}
-          creator={'Himanshu'}
-          desc={
-            'Learn the basics of web development with HTML, CSS, and JavaScript'
-          }
-          lectureCount={2}
-          addToPlaylistHandler={addToPlaylistHandler}
-          id={'9u402uo95h345'}
-        />
-        <CourseCard
-          title={'Introduction to Web Development'}
-          imageSrc={
-            'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
-          }
-          views={'1100'}
-          creator={'Himanshu'}
-          desc={
-            'Learn the basics of web development with HTML, CSS, and JavaScript'
-          }
-          lectureCount={2}
-          addToPlaylistHandler={addToPlaylistHandler}
-          id={'9u402uo95h345'}
-        />
+        { courses.length > 0 ? (
+          courses.map(course => {
+            return (
+              <CourseCard
+                key={course._id}
+                title={course.title}
+                imageSrc={course.poster.url}
+                views={course.views}
+                creator={course.createdBy}
+                desc={course.description}
+                lectureCount={course.numberOfVideo}
+                addToPlaylistHandler={addToPlaylistHandler}
+                id={course._id}
+              />
+            );
+          })
+        ) : (
+          <Heading children="Courses Not Found" opacity={0.4} mt={'4'} />
+        )}
       </Stack>
     </Container>
   );
