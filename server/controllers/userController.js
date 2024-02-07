@@ -61,10 +61,8 @@ export const logout = catchAsyncError(async (req, res, next) => {
     .clearCookie("token", {
       maxAge: new Date(0),
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      path:"/",
-      domain: "loop-course-server.vercel.app"
+    secure: true,
+    sameSite: "none",
      
     })
     .json({
