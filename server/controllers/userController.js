@@ -58,11 +58,11 @@ export const login = catchAsyncError(async (req, res, next) => {
 export const logout = catchAsyncError(async (req, res, next) => {
   res
     .status(200)
-    .clearCookie("token", "", {
+    .clearCookie("token", {
       maxAge: new Date(0),
       httpOnly: true,
-      secure: false,
-      sameSite: "Lax",
+      secure: true,
+      sameSite: "none",
       path:"/",
       domain: process.env.FRONTEND_URL
      
