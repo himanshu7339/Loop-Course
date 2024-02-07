@@ -64,7 +64,7 @@ export const logout = catchAsyncError(async (req, res, next) => {
       secure: true,
       sameSite: "none",
       path:"/",
-      domain: process.env.FRONTEND_URL
+      domain: "loop-course-server.vercel.app"
      
     })
     .json({
