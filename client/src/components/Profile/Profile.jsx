@@ -45,6 +45,7 @@ const Profile = ({ user }) => {
 
   const changeImageSubmitHandler = async (e, image) => {
     e.preventDefault();
+    console.log(image)
     const myForm = new FormData();
     myForm.append('file', image);
     await dispatch(updateProfilePicture(myForm));

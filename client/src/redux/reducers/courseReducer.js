@@ -1,9 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit';
 
 const initialState = {
-    courses: [],
-    lectures :[]
-  };
+  courses: [],
+  lectures: [],
+};
 
 export const coursesReducer = createReducer(initialState, builder => {
   builder
@@ -17,7 +17,8 @@ export const coursesReducer = createReducer(initialState, builder => {
     .addCase('allCoursesFail', (state, action) => {
       state.loading = false;
       state.courses = action.payload;
-    }).addCase('getCourseRequest', state => {
+    })
+    .addCase('getCourseRequest', state => {
       state.loading = true;
     })
     .addCase('getCourseSuccess', (state, action) => {
@@ -27,20 +28,22 @@ export const coursesReducer = createReducer(initialState, builder => {
     .addCase('getCourseFail', (state, action) => {
       state.loading = false;
       state.error = action.payload;
-    }).addCase('addToPlaylistRequest', state => {
-        state.loading = true;
-      })
-      .addCase('addToPlaylistSuccess', (state, action) => {
-        state.loading = false;
-        state.message = action.payload;
-      })
-      .addCase('addToPlaylistFail', (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      }).addCase('clearError', state => {
-        state.error = null;
-      })
-      .addCase('clearMessage', state => {
-        state.message = null;
-      });
+    })
+    .addCase('addToPlaylistRequest', state => {
+      state.loading = true;
+    })
+    .addCase('addToPlaylistSuccess', (state, action) => {
+      state.loading = false;
+      state.message = action.payload;
+    })
+    .addCase('addToPlaylistFail', (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    })
+    .addCase('clearError', state => {
+      state.error = null;
+    })
+    .addCase('clearMessage', state => {
+      state.message = null;
+    });
 });

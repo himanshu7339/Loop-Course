@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   Box,
@@ -18,65 +18,65 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import Sidebar from '../../Sidebar';
 import { RiDeleteBin7Fill } from 'react-icons/ri';
 import CourseModel from './CourseModel';
+import { toast } from 'react-hot-toast';
+import {
+  getAllCourseLectures,
+  getAllCourses,
+} from '../../../../redux/actions/courseAction';
+import { addLecture, deleteCourse, deleteLecture } from '../../../../redux/actions/adminAction';
+
 const AdminCourses = () => {
-  const Courses = [
-    {
-      title: 'Sample Title 1',
-      poster: {
-        url: 'https://images.pexels.com/photos/4497761/pexels-photo-4497761.jpeg?auto=compress&cs=tinysrgb&w=600',
-      },
-      category: 'Action',
-      _id: '1',
-      views: 1000,
-      createdBy: 'Himanshu',
-      numOfVideos: 5,
-    },
-    {
-      title: 'Sample Title 2',
-      poster: {
-        url: 'https://images.pexels.com/photos/4497761/pexels-photo-4497761.jpeg?auto=compress&cs=tinysrgb&w=600',
-      },
-      category: 'Comedy',
-      _id: '2',
-      views: 1500,
-      createdBy: 'Rahul',
-      numOfVideos: 8,
-    },
-    {
-      title: 'Sample Title 3',
-      poster: {
-        url: 'https://images.pexels.com/photos/4497761/pexels-photo-4497761.jpeg?auto=compress&cs=tinysrgb&w=600',
-      },
-      category: 'Drama',
-      _id: '3',
-      views: 1200,
-      createdBy: 'Vishal',
-      numOfVideos: 6,
-    },
-    // Add more entries as needed
-  ];
+  const { courses, lectures } = useSelector(state => state.courses);
+  const { loading, error, message } = useSelector(state => state.admin);
+
+  const dispatch = useDispatch();
+
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const courseDetailsHandler = userId => {
+  const [courseId,setCourseId] = useState("")
+  const [courseTitle,setCourseTitle] = useState("")
+  const courseDetailsHandler = (courseId,title) => {
+    dispatch(getAllCourseLectures(courseId));
     onOpen();
+    setCourseId(courseId)
+    setCourseTitle(title)
   };
 
-  const deleteUserHandler = userId => {
-    console.log(userId);
+  const deleteCourseHandler = courseId => {
+    dispatch(deleteCourse(courseId));
   };
 
-  const deleteLectureButtonHandler = (courseId, lectureId) => {
-    console.log(courseId);
-    console.log(lectureId);
+  const deleteLectureButtonHandler = async(courseId, lectureId) => {
+   await dispatch(deleteLecture(courseId,lectureId))
+   dispatch(getAllCourseLectures(courseId))
   };
 
-  const addLectureButtonHandler = (e,courseId,title,description,video) => {
+  const addLectureButtonHandler = async(e, courseId, title, description, video) => {
     e.preventDefault()
-    console.log('add lecture');
+    const myForm = new FormData();
+    myForm.append("title",title)
+    myForm.append("description",description)
+    myForm.append("file",video)
+  await  dispatch(addLecture(courseId,myForm));
+    dispatch(getAllCourseLectures(courseId))
+    
   };
 
+  useEffect(() => {
+   
+    if (error) {
+      toast.error(error);
+      dispatch({ type: 'clearError' });
+    }
+    if (message) {
+      toast.success(message);
+      dispatch({ type: 'clearMessage' });
+    }
+    dispatch(getAllCourses());
+  }, [dispatch, error, message]);
   return (
     <Grid minH={'100vh'} templateColumns={['1fr', '5fr 1fr']}>
       <Box p={['0', '8']} overflowX={'auto'}>
@@ -104,22 +104,23 @@ const AdminCourses = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {Courses.map(items => {
-                return (
-                  <Row
-                    key={items._id}
-                    deleteUserHandler={deleteUserHandler}
-                    courseDetailsHandler={courseDetailsHandler}
-                    _id={items._id}
-                    title={items.title}
-                    poster={items.poster}
-                    category={items.category}
-                    createdBy={items.createdBy}
-                    numOfVideos={items.numOfVideos}
-                    views={items.views}
-                  />
-                );
-              })}
+              {courses &&
+                courses.map(items => {
+                  return (
+                    <Row
+                      key={items._id}
+                      deleteUserHandler={deleteCourseHandler}
+                      courseDetailsHandler={courseDetailsHandler}
+                      _id={items._id}
+                      title={items.title}
+                      poster={items.poster}
+                      category={items.category}
+                      createdBy={items.createdBy}
+                      numOfVideos={items.numOfVideos}
+                      views={items.views}
+                    />
+                  );
+                })}
             </Tbody>
           </Table>
         </TableContainer>
@@ -127,9 +128,11 @@ const AdminCourses = () => {
           isOpen={isOpen}
           onClose={onClose}
           deleteButtonHandler={deleteLectureButtonHandler}
-          add={addLectureButtonHandler}
-          id={'dfhsuff'}
-          courseTitle={'React Course'}
+          addLectureButtonHandler={addLectureButtonHandler}
+          id={courseId}
+          courseTitle={courseTitle}
+          lectures={lectures}
+          loading={loading}
         />
       </Box>
       <Sidebar />
@@ -149,6 +152,7 @@ function Row({
   numOfVideos,
   courseDetailsHandler,
   deleteUserHandler,
+  loading,
 }) {
   return (
     <Tr>
@@ -165,13 +169,17 @@ function Row({
       <Td>
         <HStack justifyContent={'flex-end'}>
           <Button
-            onClick={() => courseDetailsHandler(_id)}
+            onClick={() => courseDetailsHandler(_id,title)}
             variant={'outline'}
             color={'purple.500'}
           >
             View Lecture
           </Button>
-          <Button onClick={() => deleteUserHandler(_id)} color={'purple.600'}>
+          <Button
+            isLoading={loading}
+            onClick={() => deleteUserHandler(_id)}
+            color={'purple.600'}
+          >
             <RiDeleteBin7Fill />
           </Button>
         </HStack>

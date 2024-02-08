@@ -13,10 +13,8 @@ import {
   Box,
   Grid,
   Heading,
-  Image,
   Input,
   Button,
-  HStack,
   Text,
   Stack,
   VStack,
@@ -28,13 +26,16 @@ const CourseModel = ({
   id,
   deleteButtonHandler,
   courseTitle,
-  lecture = [],
+  lectures = [],
   addLectureButtonHandler,
+  loading,
 }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [videoPrev, setVideoPrev] = useState('');
   const [video, setVideo] = useState('');
+
+  console.log(video);
 
   const changeVideoHandler = e => {
     const file = e.target.files[0];
@@ -42,6 +43,7 @@ const CourseModel = ({
     reader.readAsDataURL(file);
     reader.onload = () => {
       setVideoPrev(reader.result);
+      setVideo(file);
     };
   };
   const closeHandler = () => {
@@ -52,7 +54,12 @@ const CourseModel = ({
   };
   return (
     <>
-      <Modal size={'full'} isOpen={isOpen} onClose={closeHandler} scrollBehavior='outside'>
+      <Modal
+        size={'full'}
+        isOpen={isOpen}
+        onClose={closeHandler}
+        scrollBehavior="outside"
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{courseTitle}</ModalHeader>
@@ -65,19 +72,24 @@ const CourseModel = ({
                   <Heading opacity={0.4} size={'sm'}>{`#${id}`}</Heading>
                 </Box>
                 <Heading size={'lg'}>Lectures</Heading>
-                <VideoCard
-                  title={'Learn Python '}
-                  description={'You can learn python in 100 day challenge'}
-                  num={7}
-                  lectureId={'dftgdgdghtjg'}
-                  courseId={'gdfoighefiogh'}
-                  deleteButtonHandler={deleteButtonHandler}
-                />
+                {lectures &&
+                  lectures.map((item, i) => (
+                    <VideoCard
+                      key={i}
+                      title={item.title}
+                      description={item.description}
+                      num={i + 1}
+                      lectureId={item._id}
+                      courseId={id}
+                      deleteButtonHandler={deleteButtonHandler}
+                      loading={loading}
+                    />
+                  ))}
               </Box>
               <Box>
                 <form
                   onSubmit={e =>
-                    addLectureButtonHandler(e, id, title, description,video)
+                    addLectureButtonHandler(e, id, title, description, video)
                   }
                 >
                   <VStack spacing={'4'}>
@@ -127,6 +139,7 @@ const CourseModel = ({
                     )}
 
                     <Button
+                      isLoading={loading}
                       w={'full'}
                       color={'white'}
                       colorScheme="purple"
@@ -165,6 +178,7 @@ function VideoCard({
   lectureId,
   courseId,
   deleteButtonHandler,
+  loading,
 }) {
   return (
     <Stack
@@ -181,6 +195,7 @@ function VideoCard({
         <Text children={description}></Text>
       </Box>
       <Button
+        isLoading={loading}
         color={'purple.600'}
         onClick={() => deleteButtonHandler(courseId, lectureId)}
       >

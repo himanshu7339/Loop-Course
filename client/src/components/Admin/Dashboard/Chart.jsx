@@ -21,9 +21,9 @@ ChartJS.register(
   ArcElement,
   Legend
 );
-export const LineChart = () => {
+export const LineChart = ({views=[]}) => {
   const labels = getLastYearMonth();
-  console.log(labels);
+ 
   const options = {
     responsive: true,
     plugins: {
@@ -41,7 +41,7 @@ export const LineChart = () => {
     datasets: [
       {
         label: 'Views',
-        data: [1, 2, 3, 4],
+        data: views,
         borderColor: 'rgba(107,70,193,0.5)',
         backgroundColor: '#6b46c1',
         borderWidth: 1,
@@ -52,14 +52,14 @@ export const LineChart = () => {
   return <Line options={options} data={data} />;
 };
 
-export const DoughnutChart = () => {
+export const DoughnutChart = ({users=[]}) => {
   const labels = ['Subscribe', 'Not Subscribed'];
   const data = {
     labels,
     datasets: [
       {
         label: 'Views',
-        data: [3, 20],
+        data:users,
         borderColor: ['rgb(62,12,171)', 'rgb(214,43,129)'],
         backgroundColor: ['rgba(62,12,171,0.3)', 'rgba(214,43,129,0.3)'],
         borderWidth: 1,

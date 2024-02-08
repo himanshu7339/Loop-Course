@@ -40,7 +40,7 @@ export const updateProfilePicture = formData => async dispatch => {
 
       {
         headers: {
-            'Content-Type': 'multipart/from-data',
+            'Content-Type': 'multipart/form-data',
         },
         withCredentials: true,
       }

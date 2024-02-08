@@ -52,5 +52,5 @@ router.route("/removefromplaylist").delete(isAuth, removeToPlayList);
 
 // admin routes
 router.route("/admin/users").get(isAuth,authorizeAdmin,getAllUsers)
-router.route("/admin/user/:id").put(isAuth,authorizeAdmin,updateUserRole).delete(isAuth,authorizeAdmin,updateUserRole,deleteUser)
+router.route("/admin/user/:id").put(isAuth,authorizeAdmin,updateUserRole).delete(isAuth,authorizeAdmin,deleteUser)
 export default router;

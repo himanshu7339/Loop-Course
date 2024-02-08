@@ -1,20 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import {
   Box,
   Grid,
-  Container,
   Heading,
-  VStack,
-  Input,
-  Select,
-  Image,
   Button,
   Table,
   HStack,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
@@ -22,163 +16,88 @@ import {
   TableContainer,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 import Sidebar from '../Sidebar';
 import { RiDeleteBin7Fill } from 'react-icons/ri';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteUser, getAllUsers, updateUserRole } from '../../../redux/actions/adminAction';
+import Loader from '../../Layout/Loader';
 const Users = () => {
-  const users = [
-    {
-      _id: 1,
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      role: 'Admin',
-      description: 'System Administrator with full access',
-      subscription: {
-        status: 'Active',
-      },
-    },
-    {
-      _id: 2,
-      name: 'Alice Johnson',
-      email: 'alice.j@example.com',
-      role: 'Editor',
-      description: 'Content editor responsible for article management',
-      subscription: {
-        status: 'Active',
-      },
-    },
-    {
-      _id: 3,
-      name: 'Bob Smith',
-      email: 'bob.smith@example.com',
-      role: 'User',
-      description: 'Regular user with basic access',
-      subscription: {
-        status: 'Inactive',
-      },
-    },
-    {
-      _id: 4,
-      name: 'Emma White',
-      email: 'emma.white@example.com',
-      role: 'Viewer',
-      description: 'Limited access to view content',
-      subscription: {
-        status: 'Active',
-      },
-    },
-    {
-      _id: 5,
-      name: 'Charlie Brown',
-      email: 'charlie.b@example.com',
-      role: 'Moderator',
-      description: 'Moderator with content moderation responsibilities',
-      subscription: {
-        status: 'Active',
-      },
-    },
-    {
-      _id: 6,
-      name: 'Grace Miller',
-      email: 'grace.m@example.com',
-      role: 'User',
-      description: 'Regular user with additional permissions',
-      subscription: {
-        status: 'Inactive',
-      },
-    },
-    {
-      _id: 7,
-      name: 'Daniel Green',
-      email: 'daniel.g@example.com',
-      role: 'Editor',
-      description: 'Content editor specializing in multimedia content',
-      subscription: {
-        status: 'Active',
-      },
-    },
-    {
-      _id: 8,
-      name: 'Olivia Brown',
-      email: 'olivia.b@example.com',
-      role: 'Admin',
-      description: 'System Administrator managing user accounts',
-      subscription: {
-        status: 'Active',
-      },
-    },
-    {
-      _id: 9,
-      name: 'Liam Davis',
-      email: 'liam.d@example.com',
-      role: 'User',
-      description: 'New user with limited access',
-      subscription: {
-        status: 'Inactive',
-      },
-    },
-    {
-      _id: 10,
-      name: 'Ava Wilson',
-      email: 'ava.w@example.com',
-      role: 'Viewer',
-      description: 'Viewer with access to specific content categories',
-      subscription: {
-        status: 'Active',
-      },
-    },
-  ];
+  const dispatch = useDispatch();
+  const { users, loading, error, message } = useSelector(state => state.admin);
 
-  const updateUserHandler = (userId) =>{
-console.log(userId)
-  }
+  const updateUserHandler = userId => {
+    dispatch(updateUserRole(userId))
+  };
 
-  const deleteUserHandler = (userId) =>{
+  const deleteUserHandler = userId => {
     console.log(userId)
-  }
+    dispatch(deleteUser(userId))
+  };
+
+  useEffect(() => {
+    dispatch(getAllUsers());
+    if (error) {
+      toast.error(error);
+      dispatch({ type: 'clearError' });
+    }
+    if (message) {
+      toast.success(message);
+      dispatch({ type: 'clearMessage' });
+    }
+  }, [dispatch, error, message]);
   return (
     <Grid minH={'100vh'} templateColumns={['1fr', '5fr 1fr']}>
-      <Box p={['0', '16']} overflowX={'auto'}>
-        <Heading
-          textTransform={'uppercase'}
-          children="All Users"
-          my={'16'}
-          textAlign={['center', 'left']}
-        />
+       
+        <Box p={['0', '16']} overflowX={'auto'}>
+          <Heading
+            textTransform={'uppercase'}
+            children="All Users"
+            my={'16'}
+            textAlign={['center', 'left']}
+          />
 
-        <TableContainer w={['100vw', 'full']}>
-          <Table variant={'simple'} size={'lg'}>
-            <TableCaption>All Available</TableCaption>
+          <TableContainer w={['100vw', 'full']}>
+            <Table variant={'simple'} size={'lg'}>
+              <TableCaption>All Available</TableCaption>
 
-            <Thead>
-              <Tr>
-                <Th>Id</Th>
-                <Th>Name</Th>
-                <Th>Email</Th>
-                <Th>Role</Th>
-                <Th>Subscription</Th>
-                <Th isNumeric>Action</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {users.map(items => {
-                return (
-                  <Row
-                    key={items._id}
-                    deleteUserHandler={deleteUserHandler}
-                    updateUserHandler={updateUserHandler}
-                    
-                    _id={items._id}
-                    name={items.name}
-                    email={items.email}
-                    role={items.role}
-                    subscription={items.subscription.status}
-                  />
-                );
-              })}
-            </Tbody>
-          </Table>
-        </TableContainer>
-      </Box>
+              <Thead>
+                <Tr>
+                  <Th>Id</Th>
+                  <Th>Name</Th>
+                  <Th>Email</Th>
+                  <Th>Role</Th>
+                  <Th>Subscription</Th>
+                  <Th isNumeric>Action</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {users &&
+                  users.map(items => {
+                    return (
+                      <Row
+                        key={items._id}
+                        deleteUserHandler={deleteUserHandler}
+                        updateUserHandler={updateUserHandler}
+                        _id={items._id}
+                        loading={loading}
+                        name={items.name}
+                        email={items.email}
+                        role={items.role}
+                        subscription={
+                          items.subscription &&
+                          items.subscription.status === 'active'
+                            ? 'Active'
+                            : 'Not Active'
+                        }
+                      />
+                    );
+                  })}
+              </Tbody>
+            </Table>
+          </TableContainer>
+        </Box>
+      
       <Sidebar />
     </Grid>
   );
@@ -194,6 +113,7 @@ function Row({
   subscription,
   updateUserHandler,
   deleteUserHandler,
+  loading
 }) {
   return (
     <Tr>
@@ -209,6 +129,7 @@ function Row({
             onClick={() => updateUserHandler(_id)}
             variant={'outline'}
             color={'purple.500'}
+            isLoading={loading}
           >
             Change Role
           </Button>
