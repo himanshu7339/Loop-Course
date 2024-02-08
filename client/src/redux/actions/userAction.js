@@ -103,7 +103,7 @@ export const addToPlaylist = id => async dispatch => {
 };
 
 
-//login action
+//buy subscription
 export const buySubscription = () => async dispatch => {
   try {
     dispatch({ type: 'buySubscriptionRequest' });
@@ -118,5 +118,22 @@ export const buySubscription = () => async dispatch => {
     dispatch({ type: 'buySubscriptionSuccess', payload: data.subscriptionId });
   } catch (error) {
     dispatch({ type: 'buySubscriptionFail', payload: error.response.data.message });
+  }
+};
+//cancel subscription
+export const cancelSubscription = () => async dispatch => {
+  try {
+    dispatch({ type: 'cancelSubscriptionRequest' });
+    const { data } = await axios.delete(
+      `${server}/subscribe/cancel`,
+      {
+        
+        withCredentials: true,
+      }
+    );
+
+    dispatch({ type: 'cancelSubscriptionSuccess', payload: data.message });
+  } catch (error) {
+    dispatch({ type: 'cancelSubscriptionFail', payload: error.response.data.message });
   }
 };

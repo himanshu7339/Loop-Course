@@ -26,11 +26,22 @@ import {
   ModalBody,
   ModalCloseButton,
 } from '@chakra-ui/react';
-import { removeFromPlaylist, updateProfilePicture } from '../../redux/actions/profileAction';
-import { getMyProfile } from '../../redux/actions/userAction';
+import {
+  removeFromPlaylist,
+  updateProfilePicture,
+} from '../../redux/actions/profileAction';
+import {
+  cancelSubscription,
+  getMyProfile,
+} from '../../redux/actions/userAction';
 const Profile = ({ user }) => {
   const dispatch = useDispatch();
   const { loading, message, error } = useSelector(state => state.profile);
+  const {
+    loading: subscriptionLoading,
+    message: subscriptionMessage,
+    error: subscriptionError,
+  } = useSelector(state => state.subscription);
 
   const changeImageSubmitHandler = async (e, image) => {
     e.preventDefault();
@@ -38,6 +49,11 @@ const Profile = ({ user }) => {
     myForm.append('file', image);
     await dispatch(updateProfilePicture(myForm));
     dispatch(getMyProfile());
+  };
+
+  const cancelSubscriptionHandler = () => {
+    dispatch(cancelSubscription());
+    
   };
 
   useEffect(() => {
@@ -49,12 +65,20 @@ const Profile = ({ user }) => {
       toast.success(message);
       dispatch({ type: 'clearMessage' });
     }
-  }, [dispatch, error, message]);
-
+    if (subscriptionError) {
+      toast.error(subscriptionError);
+      dispatch({ type: 'clearError' });
+    }
+    if (subscriptionMessage) {
+      toast.success(subscriptionMessage);
+      dispatch({ type: 'clearMessage' });
+    }
+   
+  }, [dispatch, error, message,subscriptionError,subscriptionMessage]);
 
   const removeFromPlaylistHandler = async id => {
-   await dispatch(removeFromPlaylist(id))
-    dispatch(getMyProfile())
+    await dispatch(removeFromPlaylist(id));
+    dispatch(getMyProfile());
   };
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
@@ -98,7 +122,12 @@ const Profile = ({ user }) => {
             <HStack>
               <Text fontWeight={'bold'}>Subscription</Text>
               {user.subscription && user.subscription.status === 'active' ? (
-                <Button color={'yellow.500'} variant={'unstyled'}>
+                <Button
+                  onClick={cancelSubscriptionHandler}
+                  color={'yellow.500'}
+                  variant={'unstyled'}
+                  isLoading={subscriptionLoading}
+                >
                   Cancel Subscription
                 </Button>
               ) : (
@@ -144,7 +173,9 @@ const Profile = ({ user }) => {
                       Watch Now
                     </Button>
                   </Link>
-                  <Button onClick={()=>removeFromPlaylistHandler(playlist.course)}>
+                  <Button
+                    onClick={() => removeFromPlaylistHandler(playlist.course)}
+                  >
                     <RiDeleteBin7Fill />
                   </Button>
                 </HStack>

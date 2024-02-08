@@ -12,13 +12,15 @@ import {
 import axios from 'axios';
 import { server } from '../../redux/store';
 import { buySubscription } from '../../redux/actions/userAction';
-const Subscribe = ({user}) => {
+const Subscribe = ({ user }) => {
   const dispatch = useDispatch();
   const [key, setKey] = useState('');
   const { loading, error, subscriptionId } = useSelector(
     state => state.subscription
   );
-  
+
+  const { error: courseError } = useSelector(state => state.courses);
+
   const subscriptionHandler = async () => {
     const {
       data: { key },
@@ -29,13 +31,13 @@ const Subscribe = ({user}) => {
 
   useEffect(() => {
     if (error) {
-      toast.error(error);
+      toast.error(courseError);
       dispatch({ type: 'clearError' });
     }
-    // if (message) {
-    //   toast.success(message);
-    //   dispatch({ type: 'clearMessage' });
-    // }
+    if (courseError) {
+      toast.error(courseError);
+      dispatch({ type: 'clearError' });
+    }
 
     if (subscriptionId) {
       const openPopUp = () => {
@@ -43,21 +45,21 @@ const Subscribe = ({user}) => {
           key,
           name: 'Loop Course',
           description: 'Get access to all premium content',
-          subscription_id:subscriptionId,
-          callback_url:`${server}/paymentverification`,
+          subscription_id: subscriptionId,
+          callback_url: `${server}/paymentverification`,
 
-          prefill: { 
-            "name": user.name, 
-            "email": user.email, 
-            "contact": "" 
-        },
+          prefill: {
+            name: user.name,
+            email: user.email,
+            contact: '',
+          },
 
-        notes: {
-          "address": "Himanshu Office"
-      },
-      theme: {
-        "color": "#FFC00"
-    }
+          notes: {
+            address: 'Himanshu Office',
+          },
+          theme: {
+            color: '#FFC00',
+          },
         };
         const razor = new window.Razorpay(options);
         razor.open();
@@ -65,7 +67,15 @@ const Subscribe = ({user}) => {
 
       openPopUp();
     }
-  }, [dispatch, error, user.name,user.email,key,subscriptionId]);
+  }, [
+    dispatch,
+    error,
+    user.name,
+    user.email,
+    key,
+    subscriptionId,
+    courseError,
+  ]);
   return (
     <Container h={'90vh'} p={'16'}>
       <Heading children="Welcome" my={'8'} textAlign={'center'} />

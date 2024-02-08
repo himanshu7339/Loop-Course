@@ -2,6 +2,7 @@ import { createReducer } from '@reduxjs/toolkit';
 
 const initialState = {
     courses: [],
+    lectures :[]
   };
 
 export const coursesReducer = createReducer(initialState, builder => {
@@ -16,6 +17,16 @@ export const coursesReducer = createReducer(initialState, builder => {
     .addCase('allCoursesFail', (state, action) => {
       state.loading = false;
       state.courses = action.payload;
+    }).addCase('getCourseRequest', state => {
+      state.loading = true;
+    })
+    .addCase('getCourseSuccess', (state, action) => {
+      state.loading = false;
+      state.lectures = action.payload;
+    })
+    .addCase('getCourseFail', (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
     }).addCase('addToPlaylistRequest', state => {
         state.loading = true;
       })

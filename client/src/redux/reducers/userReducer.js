@@ -162,5 +162,15 @@ export const subscriptionReducer = createReducer(initialState, builder => {
     })
     .addCase('clearMessage', state => {
       state.message = null;
-    });;
+    }).addCase('cancelSubscriptionRequest', state => {
+      state.loading = true;
+    })
+    .addCase('cancelSubscriptionSuccess', (state, action) => {
+      state.loading = false;
+      state.message = action.payload
+    })
+    .addCase('cancelSubscriptionFail', (state, action) => {
+      state.loading = false;
+      state.error = action.payload
+    });
 });

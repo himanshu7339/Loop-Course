@@ -87,7 +87,9 @@ function App() {
               }
             />
             <Route path="/courses" element={<Courses />} />
-            <Route path="/course/:id" element={<CourseDetails />} />
+            <Route path="/course/:id" element={ <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <CourseDetails user={user} />
+                </ProtectedRoute>} />
             <Route
               path="/login"
               element={
