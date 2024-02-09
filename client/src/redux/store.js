@@ -15,4 +15,5 @@ export const store = configureStore({
   },
 });
 
-export const server = `https://course-loop-server.onrender.com/api/v1`;
+// export const server = `https://course-loop-server.onrender.com/api/v1`;
+ export const server = `http://localhost:7000/api/v1/`;

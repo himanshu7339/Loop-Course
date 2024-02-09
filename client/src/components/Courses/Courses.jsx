@@ -19,12 +19,26 @@ const Courses = () => {
   const [category, setCategory] = useState('');
  
   const categories = [
-    'Electronics',
-    'Clothing',
-    'Books',
-    'Home Decor',
-    'Sports',
-    'Beauty',
+    "Foundations of Software Engineering",
+  "Software Development Fundamentals",
+  "Web Development and Design",
+  "Mobile App Development",
+  "Database Systems and Management",
+  "Software Testing and Quality Assurance",
+  "DevOps and Continuous Integration",
+  "Cloud Computing and Infrastructure",
+  "Algorithms and Data Structures",
+  "Cybersecurity and Software Protection",
+  "User Interface (UI) and User Experience (UX) Design",
+  "Agile and Scrum Methodologies",
+  "Programming Languages and Paradigms",
+  "Machine Learning and Artificial Intelligence for Software Engineers",
+  "Software Project Management",
+  "Software Architecture and Design Patterns",
+  "Networking for Software Engineers",
+  "Software Maintenance and Debugging",
+  "Embedded Systems Development",
+  "Open Source Development and Collaboration"
   ];
   const addToPlaylistHandler = async courseId => {
    await dispatch(addToPlaylist(courseId));
@@ -49,7 +63,7 @@ const Courses = () => {
 
   return (
     <Container minH={'95vh'} maxW={'container.lg'} paddingY={'8'}>
-      <Heading children="All Courses" m={'8'} />
+      <Heading children="All Courses" m={'8'} textDecoration={"underline"} />
 
       <Input
         focusBorderColor="yellow.500"
@@ -71,9 +85,10 @@ const Courses = () => {
         {categories.map((category, index) => {
           return (
             <Button
-              minW={'60'}
+              minW={'auto'}
               onClick={() => setCategory(category)}
               key={index}
+              
             >
               {' '}
               <Text children="Category">{category}</Text>{' '}

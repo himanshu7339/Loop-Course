@@ -21,7 +21,6 @@ import Sidebar from '../Sidebar';
 import { RiDeleteBin7Fill } from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteUser, getAllUsers, updateUserRole } from '../../../redux/actions/adminAction';
-import Loader from '../../Layout/Loader';
 const Users = () => {
   const dispatch = useDispatch();
   const { users, loading, error, message } = useSelector(state => state.admin);
@@ -80,7 +79,6 @@ const Users = () => {
                         deleteUserHandler={deleteUserHandler}
                         updateUserHandler={updateUserHandler}
                         _id={items._id}
-                        loading={loading}
                         name={items.name}
                         email={items.email}
                         role={items.role}

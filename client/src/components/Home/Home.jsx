@@ -10,7 +10,7 @@ import {
   Box,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import vg from '../../assets/images/vector-Image.jpg';
+import vg from '../../assets/images/vector-Image.png';
 import './Home.css';
 import { CgGoogle, CgYoutube } from 'react-icons/cg';
 import { SiCoursera, SiUdemy } from 'react-icons/si';
@@ -28,14 +28,31 @@ const Home = () => {
           alignItems={'center'}
           spacing={['16', '56']}
         >
-          <VStack width={'full'} alignItems={['center', 'flex-end']}>
-            <Heading children="Learn From The Experts" size={'2xl'} />
+          <VStack
+            width={'full'}
+            alignItems={['center', 'flex-start']}
+            spacing={'2rem'}
+          >
+            <Heading
+              children="Unleash Your Potential: Learn from the Experts in Every Field!"
+              size={'2xl'}
+              textDecoration={'underline'}
+            />
             <Text
+              fontSize={['medium', 'x-large']}
               textAlign={['center', 'left']}
-              children="Find Valuable Content At Reasonable Price"
+              children="Invest in Your Mind Wisely: Valuable Content at a Budget-Friendly Price!"
+              textDecoration={'underline'}
             />
             <Link to={'/courses'}>
-              <Button size={'lg'} colorScheme="yellow">
+              <Button
+                size={'lg'}
+                colorScheme="yellow"
+                borderRadius="full"
+                boxShadow="lg"
+                _hover={{ bg: 'yellow.500' }}
+                _active={{ bg: 'yellow.600' }}
+              >
                 Enroll Now
               </Button>
             </Link>
@@ -43,7 +60,7 @@ const Home = () => {
 
           <Image
             className="vector-graphic"
-            boxSize={'md'}
+            boxSize={'700px'}
             src={vg}
             objectFit={'contain'}
           />

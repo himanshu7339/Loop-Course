@@ -13,7 +13,11 @@ import {
   DrawerBody,
   useDisclosure,
 } from '@chakra-ui/react';
-import { RiDashboardFill, RiLogoutBoxFill, RiMenu5Fill } from 'react-icons/ri';
+import { RiDashboardFill, RiHomeSmileLine, RiLogoutBoxFill, RiMenu5Fill } from 'react-icons/ri';
+import { BsCameraVideo } from "react-icons/bs";
+import { TiArrowBack } from "react-icons/ti";
+import { MdContactPhone  } from "react-icons/md";
+
 import { Link } from 'react-router-dom';
 import { logoutUser } from '../../redux/actions/userAction';
 const Header = ({ isAuthenticated = false, user }) => {
@@ -45,23 +49,24 @@ const dispatch = useDispatch()
       <Drawer placement="left" isOpen={isOpen} onClose={onClose}>
         <DrawerOverlay backdropFilter={'blur(2px)'} />
         <DrawerContent>
-          <DrawerHeader borderBottomWidth={'1px'}>Course Bundler</DrawerHeader>
+          <DrawerHeader borderBottomWidth={'1px'}>Loop Course</DrawerHeader>
           <DrawerBody>
-            <VStack spacing={'4'} alignItems={'flex-start'}>
+            <VStack spacing={'4'} alignItems={'flex-start'} >
               <Link to={'/'}>
-                <Button variant={'ghost'}>Home</Button>
+                
+                <Button variant={'ghost'} gap={"2"}><RiHomeSmileLine /> Home</Button>
               </Link>
               <Link to={'/courses'}>
-                <Button variant={'ghost'}>Courses</Button>
+                <Button variant={'ghost'} gap={"2"}><BsCameraVideo /> Courses</Button>
               </Link>
               <Link to={'/request'}>
-                <Button variant={'ghost'}>Request a Course</Button>
+                <Button variant={'ghost'} gap={"2"}><TiArrowBack/>Request a Course </Button>
               </Link>
               <Link to={'/contact'}>
-                <Button variant={'ghost'}>Contact Us</Button>
+                <Button variant={'ghost'} gap={"2"}><MdContactPhone  />Contact Us</Button>
               </Link>
               <Link to={'/about'}>
-                <Button variant={'ghost'}>About Us</Button>
+                <Button variant={'ghost'} gap={"2"}>About Us</Button>
               </Link>
 
               <HStack

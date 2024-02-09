@@ -51,9 +51,9 @@ export const getMyProfile = () => async dispatch => {
         withCredentials: true,
       }
     );
-
     dispatch({ type: 'loadUserSuccess', payload: data.user });
   } catch (error) {
+    console.log(error)
     dispatch({ type: 'loadUserFail', payload: error.response.data.message });
   }
 };

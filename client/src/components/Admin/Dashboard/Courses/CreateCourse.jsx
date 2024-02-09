@@ -23,15 +23,31 @@ const CreateCourse = () => {
   const [image, setImage] = useState('');
   const [imagePrev, setImagePrev] = useState('');
 
-  console.log(title,description,createdBy,category,image)
   const categories = [
-    'Electronics',
-    'Clothing',
-    'Books',
-    'Home Decor',
-    'Sports',
-    'Beauty',
+    "Foundations of Software Engineering",
+  "Software Development Fundamentals",
+  "Web Development and Design",
+  "Mobile App Development",
+  "Database Systems and Management",
+  "Software Testing and Quality Assurance",
+  "DevOps and Continuous Integration",
+  "Cloud Computing and Infrastructure",
+  "Algorithms and Data Structures",
+  "Cybersecurity and Software Protection",
+  "User Interface (UI) and User Experience (UX) Design",
+  "Agile and Scrum Methodologies",
+  "Programming Languages and Paradigms",
+  "Machine Learning and Artificial Intelligence for Software Engineers",
+  "Software Project Management",
+  "Software Architecture and Design Patterns",
+  "Networking for Software Engineers",
+  "Software Maintenance and Debugging",
+  "Embedded Systems Development",
+  "Open Source Development and Collaboration"
   ];
+
+
+  
   const { loading, error, message } = useSelector(state => state.admin);
   const dispatch = useDispatch();
 
